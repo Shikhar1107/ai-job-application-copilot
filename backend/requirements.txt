@@ -1,0 +1,9 @@
+langchain
+langgraph
+langchain-openai 
+fastapi
+uvicorn
+pymupdf
+mlflow 
+langsmith
+python-dotenv
