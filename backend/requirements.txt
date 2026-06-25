@@ -2,7 +2,9 @@ langchain
 langgraph
 langchain-openai 
 fastapi
-uvicorn
+uvicorn[standard]
+pydantic
+pydantic-settings
 pymupdf
 mlflow 
 langsmith
