@@ -12,36 +12,46 @@ class AnalyzeRequest(BaseModel):
         description="Job description text pasted by the user.",
     )
 
+class SkillItem(BaseModel):
+    name: str = Field(
+        ...,
+        description = "Skill name exactly as extracted from text"
+    )
+    canonical_name: str = Field(
+        ...,
+        description= "Standardized skill name used for matching"
+    )
+    category: str = Field(
+        default="Other",
+        description="Skill category such as Programming, Framework, Database, Cloud, AI/ML, Devops or Other."
+    )
+    evidence: str = Field(
+        default="",
+        description="Short phrase from the source text that supports this skill."
+    )
+
 class ResumeSkillExtraction(BaseModel):
-    technical_skills: list[str] = Field(
+    skills: list[SkillItem] = Field(
         default_factory=list,
-        description="Technical skills found in the resume.",
+        description="Skills and technical experience extracted from the resume.",
     )
-    tools: list[str] = Field(
-        default_factory=list,
-        description="Tools, platforms, databases or libraries found in the resume.",
-    )
-    projects: list[str] = Field(
+    project_experience: list[str] = Field(
         default_factory=list,
         description="Relevant project or domain experience found in the resume.",
     )
 
 class JobSkillExtraction(BaseModel):
-    required_skills: list[str] = Field(
+    required_skills: list[SkillItem] = Field(
         default_factory=list,
-        description="Required skills explicitly mentioned in the job description.",
+        description="Required skills from the job description.",
     )
-    preferred_skills: list[str] = Field(
+    preferred_skills: list[SkillItem] = Field(
         default_factory=list,
-        description="Preferred or nice-to-have skills mentioned in the job description.",
-    )
-    tools: list[str] = Field(
-        default_factory=list,
-        description="Tools, frameworks, databases, or platforms mentioned in the job description."
+        description="Preferred or nice-to-have skills from the job description.",
     )
     responsibilities: list[str] = Field(
         default_factory=list,
-        description="Main respondibiliteis from the job description.",
+        description="Main responsibilities from the job description.",
     )
 
 class ResumeBulletRewrite(BaseModel):
