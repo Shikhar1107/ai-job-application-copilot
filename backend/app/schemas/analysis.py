@@ -12,6 +12,38 @@ class AnalyzeRequest(BaseModel):
         description="Job description text pasted by the user.",
     )
 
+class ResumeSkillExtraction(BaseModel):
+    technical_skills: list[str] = Field(
+        default_factory=list,
+        description="Technical skills found in the resume.",
+    )
+    tools: list[str] = Field(
+        default_factory=list,
+        description="Tools, platforms, databases or libraries found in the resume.",
+    )
+    projects: list[str] = Field(
+        default_factory=list,
+        description="Relevant project or domain experience found in the resume.",
+    )
+
+class JobSkillExtraction(BaseModel):
+    required_skills: list[str] = Field(
+        default_factory=list,
+        description="Required skills explicitly mentioned in the job description.",
+    )
+    preferred_skills: list[str] = Field(
+        default_factory=list,
+        description="Preferred or nice-to-have skills mentioned in the job description.",
+    )
+    tools: list[str] = Field(
+        default_factory=list,
+        description="Tools, frameworks, databases, or platforms mentioned in the job description."
+    )
+    responsibilities: list[str] = Field(
+        default_factory=list,
+        description="Main respondibiliteis from the job description.",
+    )
+
 class ResumeBulletRewrite(BaseModel):
     original_bullet: str
     rewritten_bullet: str

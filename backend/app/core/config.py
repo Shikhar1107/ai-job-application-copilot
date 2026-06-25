@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     BACKEND_CORS_ORIGINS: str = "http://localhost:5173"
     OPENROUTER_API_KEY: str=""
     OPENROUTER_BASE_URL: str = "http://openrouter.ai/api/v1"
-    LLM_MODEL: str = ""
+    LLM_MODEL: str = "openai/gpt-oss-120b:free"
     LLM_TEMPERATURE: float = 0.2
 
     model_config = SettingsConfigDict(
