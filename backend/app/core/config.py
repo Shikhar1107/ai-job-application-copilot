@@ -5,6 +5,10 @@ class Settings(BaseSettings):
     APP_ENV: str = "development"
     API_V1_PREFIX: str = "/api/v1"
     BACKEND_CORS_ORIGINS: str = "http://localhost:5173"
+    OPENROUTER_API_KEY: str=""
+    OPENROUTER_BASE_URL: str = "http://openrouter.ai/api/v1"
+    LLM_MODEL: str = ""
+    LLM_TEMPERATURE: float = 0.2
 
     model_config = SettingsConfigDict(
         env_file=".env",
