@@ -5,7 +5,8 @@ from app.schemas.analysis import (
     AnalyzeResponse,
     CoverLetterRequest,
     CoverLetterResponse,
-    InterviewQuestion,
+    InterviewQuestionsRequest,
+    InterviewQuestionsResponse,
     RewriteBulletsRequest,
     RewriteBulletsResponse,
     SkillItem,
@@ -13,6 +14,7 @@ from app.schemas.analysis import (
 from app.services.scoring_service import calculate_fit_score
 from app.ai.chains.resume_rewrite import rewrite_resume_bullets
 from app.ai.chains.cover_letter import generate_cover_letter
+from app.ai.chains.interview_prep import generate_interview_questions 
 from concurrent.futures import ThreadPoolExecutor
 
 def _normalize_text(value: str) -> str:
@@ -156,4 +158,20 @@ def generate_tailored_cover_letter(
 
     return CoverLetterResponse(
         cover_letter= cover_letter_result.cover_letter,
+    )
+
+def generate_tailored_interview_questions(
+    payload: InterviewQuestionsRequest,
+) -> InterviewQuestionsResponse:
+    interview_result = generate_interview_questions(
+        resume_text=payload.resume_text,
+        job_description=payload.job_description,
+        fit_score=payload.fit_score,
+        fit_summary=payload.fit_summary,
+        matched_skills=payload.matched_skills,
+        missing_skills=payload.missing_skills,
+    )
+
+    return InterviewQuestionsResponse(
+        interview_questions=interview_result.interview_questions,
     )

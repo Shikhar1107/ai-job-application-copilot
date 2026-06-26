@@ -7,10 +7,11 @@ from app.schemas.analysis import (
     CoverLetterResponse,
     RewriteBulletsRequest,
     RewriteBulletsResponse,
-    # InterviewQuestion,
+    InterviewQuestionsRequest,
+    InterviewQuestionsResponse,
     # ResumeBulletRewrite,
 )
-from app.services.analysis_service import analyze_application, generate_tailored_cover_letter, generate_resume_rewrites
+from app.services.analysis_service import analyze_application, generate_tailored_cover_letter, generate_resume_rewrites, generate_tailored_interview_questions
 
 router = APIRouter(prefix="/analysis", tags=["Analysis"])
 
@@ -57,4 +58,21 @@ def cover_letter(payload: CoverLetterRequest) -> CoverLetterResponse:
         raise HTTPException(
             status_code=500,
             detail = f"Cover letter generation failed: {str(exc)}",
+        ) from exc
+    
+@router.post("/interview-questions", response_model=InterviewQuestionsResponse)
+def interview_questions(
+    payload: InterviewQuestionsRequest
+) -> InterviewQuestionsResponse:
+    try:
+        return generate_tailored_interview_questions(payload)
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"AI provider returned an invalid response: {str(exc)}",
+        ) from exc
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Interview question generation failed: {str(exc)}",
         ) from exc

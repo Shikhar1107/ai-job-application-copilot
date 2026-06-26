@@ -76,9 +76,45 @@ class RewriteBulletsResponse(BaseModel):
     rewritten_bullets: list[ResumeBulletRewrite]
 
 class InterviewQuestion(BaseModel):
-    question: str
-    category: str
-    difficulty: str
+    question: str = Field(
+        ...,
+        description="Interview question generated for the candidate.",
+    )
+    answer: str = Field(
+        ...,
+        description="Suggested answer or answer framework for the question.",
+    )
+    category: str = Field(
+        ...,
+        description="Question category such as RAG, FastAPI, LangChain, System Design, Behavioral.",
+    )
+    difficulty: str = Field(
+        ...,
+        description="Difficulty level: Easy, Medium, or Hard.",
+    )
+    evaluation_focus: str = Field(
+        default="",
+        description="What the interviewer is trying to evaluate with this question.",
+    )
+
+class InterviewQuestionsResult(BaseModel):
+    interview_questions: list[InterviewQuestion] = Field(
+        default_factory=list,
+        description="Interview preparation questions generated for the target job.",
+    )
+
+
+class InterviewQuestionsRequest(BaseModel):
+    resume_text: str = Field(..., min_length=50)
+    job_description: str = Field(..., min_length=50)
+    fit_score: int = Field(..., ge=0, le=100)
+    fit_summary: str
+    matched_skills: list[str] = Field(default_factory=list)
+    missing_skills: list[str] = Field(default_factory=list)
+
+
+class InterviewQuestionsResponse(BaseModel):
+    interview_questions: list[InterviewQuestion]
 
 class CoverLetterResult(BaseModel):
     cover_letter: str = Field(
