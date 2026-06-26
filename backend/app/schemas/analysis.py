@@ -59,6 +59,12 @@ class ResumeBulletRewrite(BaseModel):
     rewritten_bullet: str
     reason: str
 
+class ResumeRewriteResult(BaseModel):
+    rewritten_bullets: list[ResumeBulletRewrite] = Field(
+        default_factory=list,
+        description="Resume bullets rewritten to better align with the job description."
+    )
+
 class InterviewQuestion(BaseModel):
     question: str
     category: str
