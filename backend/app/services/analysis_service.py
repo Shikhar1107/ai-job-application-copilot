@@ -8,6 +8,7 @@ from app.schemas.analysis import (
 )
 from app.services.scoring_service import calculate_fit_score
 from app.ai.chains.resume_rewrite import rewrite_resume_bullets
+from app.ai.chains.cover_letter import generate_cover_letter
 
 def _normalize_text(value: str) -> str:
     return " ".join(value.strip().lower().split())
@@ -91,6 +92,16 @@ def analyze_application(payload: AnalyzeRequest) -> AnalyzeResponse:
         missing_skills=missing_skills,
     )
 
+    cover_letter_result = generate_cover_letter(
+        resume_text=payload.resume_text,
+        job_description=payload.job_description,
+        fit_score=fit_score_result.score,
+        fit_summary=fit_score_result.summary,
+        matched_skills=matched_skills,
+        missing_skills=missing_skills,
+        rewritten_bullets=resume_rewrite_result.rewritten_bullets
+        )
+
     return AnalyzeResponse(
         fit_score=fit_score_result.score,
         fit_summary=fit_score_result.summary,
@@ -99,7 +110,7 @@ def analyze_application(payload: AnalyzeRequest) -> AnalyzeResponse:
         matched_skills=matched_skills,
         missing_skills=missing_skills,
         rewritten_bullets=resume_rewrite_result.rewritten_bullets,
-        cover_letter="Temporary mock cover letter. Real cover letter generation will be added later.",
+        cover_letter=cover_letter_result.cover_letter,
         interview_questions=[
             InterviewQuestion(
                 question="Temporary mock question. Real interview generation will be added later.",

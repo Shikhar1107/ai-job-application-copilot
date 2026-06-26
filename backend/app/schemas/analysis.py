@@ -70,6 +70,12 @@ class InterviewQuestion(BaseModel):
     category: str
     difficulty: str
 
+class CoverLetterResult(BaseModel):
+    cover_letter: str = Field(
+        ...,
+        description="A tailored cover letter generated from the resume and job description.",
+    )
+
 class AnalyzeResponse(BaseModel):
     fit_score: int = Field(
         ...,
