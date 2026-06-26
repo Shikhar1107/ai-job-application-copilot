@@ -65,6 +65,16 @@ class ResumeRewriteResult(BaseModel):
         description="Resume bullets rewritten to better align with the job description."
     )
 
+class RewriteBulletsRequest(BaseModel):
+    resume_text: str = Field(..., min_length=50)
+    job_description: str = Field(..., min_length=50)
+    matched_skills: list[str] = Field(default_factory=list)
+    missing_skills: list[str] = Field(default_factory=list)
+
+
+class RewriteBulletsResponse(BaseModel):
+    rewritten_bullets: list[ResumeBulletRewrite]
+
 class InterviewQuestion(BaseModel):
     question: str
     category: str
@@ -75,6 +85,19 @@ class CoverLetterResult(BaseModel):
         ...,
         description="A tailored cover letter generated from the resume and job description.",
     )
+
+class CoverLetterRequest(BaseModel):
+    resume_text: str = Field(..., min_length=50)
+    job_description: str = Field(..., min_length=50)
+    fit_score: int = Field(..., ge=0, le=100)
+    fit_summary: str
+    matched_skills: list[str] = Field(default_factory=list)
+    missing_skills: list[str] = Field(default_factory=list)
+    rewritten_bullets: list[ResumeBulletRewrite] = Field(default_factory=list)
+
+
+class CoverLetterResponse(BaseModel):
+    cover_letter: str
 
 class AnalyzeResponse(BaseModel):
     fit_score: int = Field(
