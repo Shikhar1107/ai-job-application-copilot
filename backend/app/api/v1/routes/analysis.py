@@ -1,5 +1,5 @@
-from fastapi import APIRouter, HTTPException
-
+from fastapi import APIRouter, HTTPException, Depends
+from sqlalchemy.orm import Session
 from app.schemas.analysis import (
     AnalyzeRequest,
     AnalyzeResponse,
@@ -12,13 +12,21 @@ from app.schemas.analysis import (
     # ResumeBulletRewrite,
 )
 from app.services.analysis_service import analyze_application, generate_tailored_cover_letter, generate_resume_rewrites, generate_tailored_interview_questions
+from app.db.session import get_db
+from app.services.history_service import save_analysis_run
 
 router = APIRouter(prefix="/analysis", tags=["Analysis"])
 
 @router.post("/analyze", response_model=AnalyzeResponse)
-def analyze_job_application(payload: AnalyzeRequest) -> AnalyzeResponse:
+def analyze_job_application(payload: AnalyzeRequest, db: Session = Depends(get_db)) -> AnalyzeResponse:
     try:
-        return analyze_application(payload)
+        response = analyze_application(payload)
+        save_analysis_run(
+            db=db,
+            request_payload=payload,
+            response_payload=response
+        )
+        return response
     except ValueError as exc:
         raise HTTPException(
             status_code=502,

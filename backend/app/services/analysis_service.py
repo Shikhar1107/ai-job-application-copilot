@@ -21,8 +21,7 @@ def analyze_application(payload: AnalyzeRequest) -> AnalyzeResponse:
             "job_description": payload.job_description,
         }
     )
-    print("GRAPH RESULT JOB SKILLS:", graph_result["job_required_skills"])
-    print("TYPE OF FIRST JOB SKILL:", type(graph_result["job_required_skills"][0]))
+    
     return AnalyzeResponse(
         fit_score=graph_result["fit_score"],
         fit_summary=graph_result["fit_summary"],

@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-
+from datetime import datetime
 class AnalyzeRequest(BaseModel):
     resume_text: str = Field(
         ...,
@@ -151,3 +151,40 @@ class AnalyzeResponse(BaseModel):
     rewritten_bullets: list[ResumeBulletRewrite]
     cover_letter: str
     interview_questions: list[InterviewQuestion]
+
+
+class AnalysisHistoryItem(BaseModel):
+    id: int
+    fit_score: int
+    fit_summary: str
+    matched_skills: list[str]
+    missing_skills: list[str]
+    created_at: datetime
+
+    model_config = {
+        "from_attributes": True
+    }
+
+
+class AnalysisDetailResponse(BaseModel):
+    id: int
+    resume_text: str
+    job_description: str
+
+    fit_score: int
+    fit_summary: str
+
+    resume_skills: list[str]
+    job_required_skills: list[str]
+    matched_skills: list[str]
+    missing_skills: list[str]
+
+    rewritten_bullets: list[ResumeBulletRewrite]
+    cover_letter: str | None
+    interview_questions: list[InterviewQuestion]
+
+    created_at: datetime
+
+    model_config = {
+        "from_attributes": True
+    }
