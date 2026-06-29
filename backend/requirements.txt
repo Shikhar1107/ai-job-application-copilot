@@ -6,8 +6,11 @@ uvicorn[standard]
 pydantic
 pydantic-settings
 pymupdf
+python-docx
+python-multipart
 mlflow 
 langsmith
 python-dotenv
 sqlalchemy
 psycopg2-binary
+docx
