@@ -1,6 +1,7 @@
 from app.ai.chains.cover_letter import generate_cover_letter
 from app.ai.chains.interview_prep import generate_interview_questions
 from app.ai.chains.resume_rewrite import rewrite_resume_bullets
+from app.services.text_context_service import limit_text
 from app.ai.graphs.job_analysis_graph import job_analysis_graph
 from app.schemas.analysis import (
     AnalyzeRequest,
@@ -53,6 +54,8 @@ def generate_resume_rewrites(
 def generate_tailored_cover_letter(
     payload: CoverLetterRequest,
 ) -> CoverLetterResponse:
+    resume_text = limit_text(payload.resume_text, max_chars=6000)
+    job_description = limit_text(payload.job_description, max_chars=4000)
     cover_letter_result = generate_cover_letter(
         resume_text=payload.resume_text,
         job_description=payload.job_description,
@@ -71,6 +74,8 @@ def generate_tailored_cover_letter(
 def generate_tailored_interview_questions(
     payload: InterviewQuestionsRequest,
 ) -> InterviewQuestionsResponse:
+    resume_text = limit_text(payload.resume_text, max_chars=6000)
+    job_description = limit_text(payload.job_description, max_chars=4000)
     interview_result = generate_interview_questions(
         resume_text=payload.resume_text,
         job_description=payload.job_description,

@@ -1,7 +1,7 @@
 from fastapi import File, APIRouter, HTTPException, UploadFile
 
 from app.schemas.resume import ResumeParseResponse
-from app.services.resume_parser import UnsuooirtedFileTypeError, parse_resume_file
+from app.services.resume_parser import UnsupportedFileTypeError, parse_resume_file
 
 router = APIRouter(prefix="/resume",tags=["Resume"])
 
@@ -13,7 +13,7 @@ async def parse_resume(
         result = await parse_resume_file(file)
         return ResumeParseResponse(**result)
     
-    except UnsuooirtedFileTypeError as exc:
+    except UnsupportedFileTypeError as exc:
         raise HTTPException(
             status_code=400,
             detail = str(exc),

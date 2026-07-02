@@ -6,7 +6,7 @@ from fastapi import UploadFile
 
 MIN_EXTRACTED_TEXT_LENGTH = 200
 
-class UnsuooirtedFileTypeError(ValueError):
+class UnsupportedFileTypeError(ValueError):
     pass
 
 class ScannedPDFError(ValueError):

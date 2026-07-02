@@ -73,8 +73,22 @@ def invoke_json_chain(
 
     raw_content = response.content
 
+    print("\n========== LLM DEBUG START ==========")
+    print("Response type:", type(response))
+    print("Response:", response)
+    print("Response content repr:", repr(raw_content))
+    print("Response additional_kwargs:", getattr(response, "additional_kwargs", None))
+    print("Response response_metadata:", getattr(response, "response_metadata", None))
+    print("========== LLM DEBUG END ==========\n")
+
     if not isinstance(raw_content, str):
         raise ValueError(f"Unexpected LLM response content: {raw_content}")
+
+    if not raw_content.strip():
+        raise ValueError(
+            "LLM returned empty content. "
+            f"Full response metadata: {getattr(response, 'response_metadata', None)}"
+        )
 
     parsed_json = extract_json_from_text(raw_content)
 
