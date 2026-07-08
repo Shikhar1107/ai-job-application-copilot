@@ -98,3 +98,41 @@ def invoke_json_chain(
         raise ValueError(
             f"LLM returned JSON but it did not match schema. JSON: {parsed_json}"
         ) from exc
+    
+def invoke_text_chain(
+    system_prompt: str,
+    user_content: str,
+) -> str:
+    """
+    Invokes the configured LLM and returns plain text.
+
+    Used for outputs where JSON mode is unstable with certain free/reasoning models.
+    """
+
+    llm = get_llm()
+
+    response = llm.invoke(
+        [
+            SystemMessage(content=system_prompt),
+            HumanMessage(content=user_content),
+        ]
+    )
+
+    raw_content = response.content
+
+    print("\n========== TEXT LLM DEBUG START ==========")
+    print("Response:", response)
+    print("Content repr:", repr(raw_content))
+    print("Metadata:", getattr(response, "response_metadata", None))
+    print("========== TEXT LLM DEBUG END ==========\n")
+
+    if not isinstance(raw_content, str):
+        raise ValueError(f"Unexpected LLM response content: {raw_content}")
+
+    if not raw_content.strip():
+        raise ValueError(
+            "LLM returned empty plain-text content. "
+            f"Full response metadata: {getattr(response, 'response_metadata', None)}"
+        )
+
+    return raw_content.strip()

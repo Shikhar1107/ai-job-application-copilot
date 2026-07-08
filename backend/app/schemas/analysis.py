@@ -118,6 +118,9 @@ class InterviewQuestionsRequest(BaseModel):
 class InterviewQuestionsResponse(BaseModel):
     interview_questions: list[InterviewQuestion]
 
+class SingleInterviewQuestionResult(BaseModel):
+    question: InterviewQuestion
+
 class CoverLetterResult(BaseModel):
     cover_letter: str = Field(
         ...,

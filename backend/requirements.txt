@@ -14,3 +14,4 @@ python-dotenv
 sqlalchemy
 psycopg2-binary
 docx
+alembic

@@ -491,6 +491,39 @@ DATABASE_URL=postgresql://postgres:postgres@localhost:5433/ai_job_copilot
 
 ---
 
+## Docker Development Mode
+
+```bash
+docker compose up --build
+```
+---
+
+## Docker Productoin Mode
+
+```bash
+docker compose -f docker-compose.prod.yml up --build
+```
+---
+## Database Migrations
+
+This project uses Alembic for versioned database migrations.
+
+Generate a migration after changing SQLAlchemy models:
+
+```bash
+cd backend
+alembic revision --autogenerate -m "describe change"
+```
+### Apply migrations:
+```bash
+cd backend
+alembic upgrade head
+```
+### Rollback one migration:
+```bash
+cd backend
+alembic downgrade -1
+```
 ## Current LLM Design Notes
 
 The project uses OpenRouter through an OpenAI-compatible API interface.
@@ -520,15 +553,12 @@ The core analysis flow is intentionally separated from optional generation endpo
 ## Future Improvements
 
 * Add OCR support for scanned resumes
-* Add Alembic database migrations
 * Add user authentication
 * Add multi-user saved analysis workspace
 * Add vector search over previous resumes and job descriptions
 * Add job description quality scoring
 * Add ATS-style keyword coverage report
 * Add downloadable PDF export
-* Add production frontend build using Nginx or Render Static Site
-* Deploy backend, frontend, and PostgreSQL on Render
 * Add GitHub Actions for linting and CI checks
 * Add LangSmith tracing for LLM workflow observability
 

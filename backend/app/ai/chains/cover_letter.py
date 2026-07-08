@@ -1,4 +1,4 @@
-from app.ai.utils.json_parser import invoke_json_chain
+from app.ai.utils.json_parser import invoke_json_chain, invoke_text_chain
 from app.ai.prompts.cover_letter import COVER_LETTER_SYSTEM_PROMPT
 from app.schemas.analysis import CoverLetterResult, ResumeBulletRewrite
 
@@ -47,11 +47,19 @@ Important:
 - Use the rewritten resume bullets as supporting evidence.
 - Do not claim the candidate has missing skills unless they are clearly present in the resume.
 - If missing skills are important, position them as areas of quick ramp-up or adjacent learning.
-- Return a JSON object with only one key: cover_letter.
+- Return only the final cover letter text.
+- Do not return JSON.
+- Do not return markdown.
 """
 
-    return invoke_json_chain(
-        schema=CoverLetterResult,
-        system_prompt=COVER_LETTER_SYSTEM_PROMPT,
+    cover_letter_text = invoke_text_chain(
+    system_prompt=(
+        COVER_LETTER_SYSTEM_PROMPT
+        + "\n\nReturn only the cover letter text. "
+        + "Do not return JSON. Do not use markdown. "
+        + "Do not add explanations before or after the letter."
+        ),
         user_content=user_content,
     )
+
+    return CoverLetterResult(cover_letter=cover_letter_text)

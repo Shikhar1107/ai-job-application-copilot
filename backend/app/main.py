@@ -24,7 +24,7 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(api_router, prefix=settings.API_V1_PREFIX)
-    Base.metadata.create_all(bind=engine)
+    # Base.metadata.create_all(bind=engine)
     return app
 
 app =create_app()

@@ -1,6 +1,6 @@
 from app.ai.utils.json_parser import invoke_json_chain
 from app.ai.prompts.interview_prep import INTERVIEW_PREP_SYSTEM_PROMPT
-from app.schemas.analysis import InterviewQuestionsResult
+from app.schemas.analysis import InterviewQuestionsResult, InterviewQuestionsResponse, SingleInterviewQuestionResult
 
 def generate_interview_questions(
         resume_text: str,

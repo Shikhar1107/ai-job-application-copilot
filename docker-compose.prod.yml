@@ -1,0 +1,40 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    container_name: ai_job_copilot_backend_prod
+    ports:
+    - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/ai_job_copilot
+      BACKEND_CORS_ORIGINS: http://localhost:3000
+    depends_on:
+      - postgres
+  
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_BACKEND_API_URL: http://localhost:8000
+    container_name: ai_job_copilot_frontend_prod
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+  
+  postgres:
+    image: postgres:16
+    container_name: ai_job_copilot_postgres_prod
+    environment:
+      POSTGRES_DB: ai_job_copilot
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_prod_data:/var/lib/postgresql/data
+volumnes:
+  postgres_prod_data:
