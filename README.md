@@ -546,9 +546,12 @@ The core analysis flow is intentionally separated from optional generation endpo
 * Alembic migrations are not yet added; the MVP currently uses SQLAlchemy table creation during startup.
 * Authentication is not implemented.
 * Multi-user workspace support is not implemented yet.
-* Deployment configuration for Render is planned but not finalized.
-
 ---
+## Deployment
+
+Render deployment instructions are available here:
+
+[docs/render-deployment.md](docs/render-deployment.md)
 
 ## Future Improvements
 
