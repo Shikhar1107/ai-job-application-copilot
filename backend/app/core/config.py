@@ -4,7 +4,7 @@ class Settings(BaseSettings):
     APP_NAME: str = "ResumeIQ — Agentic Resume Analysis System"
     APP_ENV: str = "development"
     API_V1_PREFIX: str = "/api/v1"
-    BACKEND_CORS_ORIGINS: str = "http://localhost:5173"
+    BACKEND_CORS_ORIGINS: str = "*"
     OPENROUTER_API_KEY: str=""
     OPENROUTER_BASE_URL: str = "http://openrouter.ai/api/v1"
     LLM_MODEL: str = "openai/gpt-oss-120b:free"
