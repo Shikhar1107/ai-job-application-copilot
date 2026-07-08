@@ -18,13 +18,9 @@ def save_analysis_run(
         job_required_skills=response_payload.job_required_skills,
         matched_skills=response_payload.matched_skills,
         missing_skills=response_payload.missing_skills,
-        rewritten_bullets=[
-            item.model_dump() for item in response_payload.rewritten_bullets
-        ],
-        cover_letter=response_payload.cover_letter,
-        interview_questions=[
-            item.model_dump() for item in response_payload.interview_questions
-        ],
+        rewritten_bullets=serialize_pydantic_list(response_payload.rewritten_bullets) or [],
+        cover_letter=response_payload.cover_letter or "",
+        interview_questions=serialize_pydantic_list(response_payload.interview_questions) or [],
     )
 
     db.add(analysis_run)
@@ -33,6 +29,55 @@ def save_analysis_run(
 
     return analysis_run
 
+def update_analysis_rewritten_bullets(
+    db: Session,
+    analysis_id: int,
+    rewritten_bullets: list[dict],
+) -> AnalysisRun | None:
+    analysis_run = get_analysis_by_id(db, analysis_id)
+
+    if analysis_run is None:
+        return None
+
+    analysis_run.rewritten_bullets = serialize_pydantic_list(rewritten_bullets)
+    db.commit()
+    db.refresh(analysis_run)
+
+    return analysis_run
+
+
+def update_analysis_cover_letter(
+    db: Session,
+    analysis_id: int,
+    cover_letter: str,
+) -> AnalysisRun | None:
+    analysis_run = get_analysis_by_id(db, analysis_id)
+
+    if analysis_run is None:
+        return None
+
+    analysis_run.cover_letter = cover_letter
+    db.commit()
+    db.refresh(analysis_run)
+
+    return analysis_run
+
+
+def update_analysis_interview_questions(
+    db: Session,
+    analysis_id: int,
+    interview_questions: list[dict],
+) -> AnalysisRun | None:
+    analysis_run = get_analysis_by_id(db, analysis_id)
+
+    if analysis_run is None:
+        return None
+
+    analysis_run.interview_questions =  serialize_pydantic_list(interview_questions)
+    db.commit()
+    db.refresh(analysis_run)
+
+    return analysis_run
 
 def get_analysis_history(db: Session) -> list[AnalysisRun]:
     return (
@@ -48,3 +93,27 @@ def get_analysis_by_id(db: Session, analysis_id: int) -> AnalysisRun | None:
         .filter(AnalysisRun.id == analysis_id)
         .first()
     )
+
+def serialize_pydantic_list(items: list) -> list[dict]:
+    serialized = []
+
+    for item in items or []:
+        if hasattr(item, "model_dump"):
+            serialized.append(item.model_dump())
+        elif isinstance(item, dict):
+            serialized.append(item)
+        else:
+            serialized.append(dict(item))
+
+    return serialized
+
+def delete_analysis_by_id(db: Session, analysis_id: int) -> bool:
+    analysis_run = get_analysis_by_id(db, analysis_id)
+
+    if analysis_run is None:
+        return False
+
+    db.delete(analysis_run)
+    db.commit()
+
+    return True

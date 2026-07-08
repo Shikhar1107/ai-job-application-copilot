@@ -110,6 +110,7 @@ export default function AnalyzeJob() {
 
     try {
       const result = await generateResumeBullets({
+        analysis_id: analysisResult.analysis_id,
         resume_text: resumeText,
         job_description: jobDescription,
         matched_skills: analysisResult.matched_skills || [],
@@ -132,13 +133,14 @@ export default function AnalyzeJob() {
 
     try {
       const result = await generateCoverLetter({
+        analysis_id: analysisResult.analysis_id,
         resume_text: resumeText,
         job_description: jobDescription,
         fit_score: analysisResult.fit_score,
         fit_summary: analysisResult.fit_summary,
         matched_skills: analysisResult.matched_skills || [],
         missing_skills: analysisResult.missing_skills || [],
-        rewritten_bullets: rewrittenBullets || [],
+        // rewritten_bullets: rewrittenBullets || [],
       });
 
       setCoverLetter(result.cover_letter || "");
@@ -234,6 +236,11 @@ export default function AnalyzeJob() {
 
       {analysisResult && (
         <section className="space-y-6">
+          {analysisResult.id && (
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 text-sm text-blue-700">
+              Analysis saved with ID #{analysisResult.analysis_id}. Optional generations will be saved to the same history record.
+            </div>
+          )}
           <FitScoreCard result={analysisResult} />
 
           <div className="grid gap-6 lg:grid-cols-2">

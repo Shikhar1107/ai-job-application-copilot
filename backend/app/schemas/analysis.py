@@ -66,6 +66,7 @@ class ResumeRewriteResult(BaseModel):
     )
 
 class RewriteBulletsRequest(BaseModel):
+    analysis_id: int | None = None
     resume_text: str = Field(..., min_length=50)
     job_description: str = Field(..., min_length=50)
     matched_skills: list[str] = Field(default_factory=list)
@@ -105,6 +106,7 @@ class InterviewQuestionsResult(BaseModel):
 
 
 class InterviewQuestionsRequest(BaseModel):
+    analysis_id: int | None = None
     resume_text: str = Field(..., min_length=50)
     job_description: str = Field(..., min_length=50)
     fit_score: int = Field(..., ge=0, le=100)
@@ -123,6 +125,7 @@ class CoverLetterResult(BaseModel):
     )
 
 class CoverLetterRequest(BaseModel):
+    analysis_id: int | None = None
     resume_text: str = Field(..., min_length=50)
     job_description: str = Field(..., min_length=50)
     fit_score: int = Field(..., ge=0, le=100)
@@ -136,6 +139,7 @@ class CoverLetterResponse(BaseModel):
     cover_letter: str
 
 class AnalyzeResponse(BaseModel):
+    analysis_id: int | None = None
     fit_score: int = Field(
         ...,
         ge=0,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Clock } from "lucide-react";
+import { ArrowLeft, Clock, Download } from "lucide-react";
 
 import Card from "../components/common/Card";
 import Button from "../components/common/Button";
@@ -12,6 +12,11 @@ import SkillList from "../components/analysis/SkillList";
 import ResumeBulletSuggestions from "../components/analysis/ResumeBulletSuggestion";
 import CoverLetterPanel from "../components/analysis/CoverLetterCard";
 import InterviewQuestionsPanel from "../components/analysis/InterviewQuestion";
+import {
+  buildAnalysisMarkdown,
+  downloadMarkdownFile,
+  getAnalysisMarkdownFilename,
+} from "../utils/markdownExport";
 
 import { getAnalysisById } from "../api/historyApi";
 
@@ -80,6 +85,15 @@ export default function AnalysisDetail() {
     }
   }
 
+  function handleDownloadMarkdown() {
+    if (!analysis) return;
+
+    const markdown = buildAnalysisMarkdown(analysis);
+    const filename = getAnalysisMarkdownFilename(analysis);
+
+    downloadMarkdownFile(markdown, filename);
+  }
+
   useEffect(() => {
     loadAnalysisDetail();
   }, [id]);
@@ -104,10 +118,23 @@ export default function AnalysisDetail() {
           </p>
         </div>
 
-        {analysis?.created_at && (
-          <div className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600">
-            <Clock size={16} />
-            {formatDate(analysis.created_at)}
+        {analysis && (
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={handleDownloadMarkdown}
+              className="gap-2"
+            >
+              <Download size={16} />
+              Download Markdown
+            </Button>
+
+            {analysis.created_at && (
+              <div className="inline-flex items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-600">
+                <Clock size={16} />
+                {formatDate(analysis.created_at)}
+              </div>
+            )}
           </div>
         )}
       </section>

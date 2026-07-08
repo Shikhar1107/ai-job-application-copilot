@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Clock, Eye } from "lucide-react";
+import { Clock, Eye, Trash2 } from "lucide-react";
 
 import Card from "../components/common/Card";
 import Button from "../components/common/Button";
 import Loader from "../components/common/Loader";
 import ErrorMessage from "../components/common/ErrorMessage";
-import { getAnalysisHistory } from "../api/historyApi";
+import { getAnalysisHistory, deleteAnalysisById } from "../api/historyApi";
 
 function formatDate(value) {
   if (!value) return "Unknown date";
@@ -28,6 +28,29 @@ export default function AnalysisHistory() {
   const [history, setHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
+  const [deletingId, setDeletingId] = useState(null);
+
+  async function handleDelete(id) {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this analysis? This action cannot be undone."
+    );
+
+    if (!confirmed) return;
+
+    setError("");
+    setDeletingId(id);
+
+    try {
+      await deleteAnalysisById(id);
+      setHistory((currentHistory) =>
+        currentHistory.filter((item) => item.id !== id)
+      );
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setDeletingId(null);
+    }
+  }
 
   async function loadHistory() {
     setError("");
@@ -159,12 +182,24 @@ export default function AnalysisHistory() {
                   </div>
                 </div>
 
-                <Link to={`/history/${item.id}`}>
-                  <Button variant="outline" className="gap-2">
-                    <Eye size={16} />
-                    View Details
+                <div className="flex flex-wrap gap-2">
+                  <Link to={`/history/${item.id}`}>
+                    <Button variant="outline" className="gap-2">
+                      <Eye size={16} />
+                      View Details
+                    </Button>
+                  </Link>
+
+                  <Button
+                    variant="danger"
+                    onClick={() => handleDelete(item.id)}
+                    disabled={deletingId === item.id}
+                    className="gap-2"
+                  >
+                    <Trash2 size={16} />
+                    {deletingId === item.id ? "Deleting..." : "Delete"}
                   </Button>
-                </Link>
+                </div>
               </div>
             </Card>
           ))}

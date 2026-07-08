@@ -13,3 +13,8 @@ export async function getAnalysisById(id) {
   console.log(response);
   return response.data;
 }
+
+export async function deleteAnalysisById(id) {
+  const response = await apiClient.delete(`/history/${id}`);
+  return response.data;
+};
