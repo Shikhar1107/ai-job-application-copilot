@@ -14,11 +14,11 @@ def create_app() -> FastAPI:
         version="0.1.0",
         description="Backend API for AI Job Application Copilot"
     )
-
+    cors_origins = settings.cors_origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins = [origin.strip() for origin in settings.BACKEND_CORS_ORIGINS.split(".")],
-        allow_credentials=True,
+        allow_origins = cors_origins,
+        allow_credentials=False if cors_origins == ["*"] else True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
