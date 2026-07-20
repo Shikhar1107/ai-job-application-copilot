@@ -23,6 +23,11 @@ import {
 } from "../api/analysisApi";
 
 export default function AnalyzeJob() {
+
+  const RESUME_MAX_CHARS = 8000;
+  const JD_MAX_CHARS = 5000;
+  const TOTAL_MAX_CHARS = 12000;
+
   const [resumeText, setResumeText] = useState("");
   const [jobDescription, setJobDescription] = useState("");
 
@@ -44,6 +49,16 @@ export default function AnalyzeJob() {
   const [bulletsError, setBulletsError] = useState("");
   const [coverLetterError, setCoverLetterError] = useState("");
   const [questionsError, setQuestionsError] = useState("");
+
+  const resumeCharCount = resumeText.length;
+  const jdCharCount = jobDescription.length;
+  const totalCharCount = resumeCharCount + jdCharCount;
+
+  const isResumeOverLimit = resumeCharCount > RESUME_MAX_CHARS;
+  const isJdOverLimit = jdCharCount > JD_MAX_CHARS;
+  const isTotalOverLimit = totalCharCount > TOTAL_MAX_CHARS;
+
+  const isLargeInput = isResumeOverLimit || isJdOverLimit || isTotalOverLimit;
 
   async function handleResumeUpload(file) {
     setError("");
@@ -192,6 +207,77 @@ export default function AnalyzeJob() {
             Upload or paste your resume, paste a job description, and get a
             skill match breakdown with an explainable fit score.
           </p>
+        </div>
+        <div className="rounded-xl border bg-white p-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-slate-800">
+                Input Size Limits
+              </h3>
+              <p className="mt-1 text-xs text-slate-500">
+                Recommended max: {TOTAL_MAX_CHARS.toLocaleString()} total characters
+                for stable analysis on the deployed free model.
+              </p>
+            </div>
+
+            {isLargeInput && (
+              <span className="shrink-0 rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
+                Over recommended limit
+              </span>
+            )}
+          </div>
+
+          <div className="mt-4 grid gap-3 text-sm md:grid-cols-3">
+            <div
+              className={`rounded-lg border p-3 ${
+                isResumeOverLimit
+                  ? "border-yellow-300 bg-yellow-50"
+                  : "border-slate-200 bg-slate-50"
+              }`}
+            >
+              <p className="font-medium text-slate-700">Resume</p>
+              <p className="mt-1 text-slate-600">
+                {resumeCharCount.toLocaleString()} /{" "}
+                {RESUME_MAX_CHARS.toLocaleString()} characters
+              </p>
+            </div>
+
+            <div
+              className={`rounded-lg border p-3 ${
+                isJdOverLimit
+                  ? "border-yellow-300 bg-yellow-50"
+                  : "border-slate-200 bg-slate-50"
+              }`}
+            >
+              <p className="font-medium text-slate-700">Job Description</p>
+              <p className="mt-1 text-slate-600">
+                {jdCharCount.toLocaleString()} / {JD_MAX_CHARS.toLocaleString()}{" "}
+                characters
+              </p>
+            </div>
+
+            <div
+              className={`rounded-lg border p-3 ${
+                isTotalOverLimit
+                  ? "border-yellow-300 bg-yellow-50"
+                  : "border-slate-200 bg-slate-50"
+              }`}
+            >
+              <p className="font-medium text-slate-700">Total Input</p>
+              <p className="mt-1 text-slate-600">
+                {totalCharCount.toLocaleString()} /{" "}
+                {TOTAL_MAX_CHARS.toLocaleString()} characters
+              </p>
+            </div>
+          </div>
+
+          {isLargeInput && (
+            <p className="mt-3 text-sm text-yellow-700">
+              This input is above the recommended limit for the deployed free model.
+              The analysis may be slower or may fail. For best results, shorten the
+              resume or job description before running analysis.
+            </p>
+          )}
         </div>
 
         <Button

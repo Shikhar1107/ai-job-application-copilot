@@ -1,0 +1,43 @@
+{
+  "agents": {
+    "backend-inspector": {
+      "agentId": "backend-inspector",
+      "agentType": "researcher",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "readOnly": true,
+        "capabilities": [
+          "read",
+          "list"
+        ],
+        "model": "inherit"
+      },
+      "createdAt": "2026-07-13T05:34:19.664Z",
+      "domain": "backend",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    },
+    "frontend-inspector": {
+      "agentId": "frontend-inspector",
+      "agentType": "researcher",
+      "status": "idle",
+      "health": 1,
+      "taskCount": 0,
+      "config": {
+        "readOnly": true,
+        "capabilities": [
+          "read",
+          "list"
+        ],
+        "model": "inherit"
+      },
+      "createdAt": "2026-07-13T05:34:21.528Z",
+      "domain": "frontend",
+      "model": "inherit",
+      "modelRoutedBy": "explicit"
+    }
+  },
+  "version": "3.0.0"
+}

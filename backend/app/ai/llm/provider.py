@@ -17,5 +17,7 @@ def get_llm() -> ChatOpenAI:
         model = settings.LLM_MODEL,
         api_key= settings.OPENROUTER_API_KEY,
         base_url= settings.OPENROUTER_BASE_URL,
-        temperature= settings.LLM_TEMPERATURE
+        temperature= settings.LLM_TEMPERATURE,
+        max_tokens=1200,
+
     )
